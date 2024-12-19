@@ -66,6 +66,7 @@ class TreeNode:
 			if child.value == None:
 				child.generate(level + 1)
 
+	# given a tree node, generate all its child states
 	def expandNode(self, level, player):
 		for i in range (0, self.board.numColumns):
 			if not self.board.addPiece(i,player[level % 2]):
@@ -79,14 +80,19 @@ class TreeNode:
 			self.children.append(TreeNode(value, newboard))
 			self.board.removePiece(i)
 	
+
+	# processes the game tree in a depth-first fashion
 	def printPostOrder(self, level  = 0):
 		player = ["X","O"]
 		if self == None:
 			return
 		if self.value is None:
 			self.expandNode(level,player)
+			results = []
 			for child in self.children:
-				child.printPostOrder(level+1)
-		else:
-			print("value is ",self.value)
-			self.board.printBoard()
+				results.append(child.printPostOrder(level+1))
+			self.value = min(results) if level % 2 == 0 else max(results)
+		
+		print("value is ",self.value)
+		self.board.printBoard()
+		return self.value
