@@ -43,11 +43,31 @@ class Player:
 
 	def makeTree(self,board):
 		#TreeNode(None, board).generate()
-		TreeNode(None, board).printPostOrder()
+		self.gameTree = TreeNode(None, board).printPostOrder()
+
+		
 
 	def getMove(self, gameBoard):
-
-		return 0
+		print(self.gameTree.boardsEqual(gameBoard))
+		print("GameTree")
+		self.gameTree.board.printBoard()
+		print("GameBoard")
+		gameBoard.printBoard()
+		if self.gameTree.boardsEqual(gameBoard):
+			max = self.gameTree.getBestMove(True) 
+			self.gameTree = max
+			print("chosen state")
+			self.gameTree.board.printBoard()
+			return max.choice
+		else:
+			for child in self.gameTree.children:
+				if child.boardsEqual(gameBoard):
+					self.gameTree = child
+					print("child board:")
+			max = self.gameTree.getBestMove(True)
+			max.board.printBoard()
+			self.gameTree = max
+		return max.choice
 
 	def getMoveAlphaBeta(self, gameBoard):
 
@@ -55,10 +75,11 @@ class Player:
 
 class TreeNode:
 
-	def __init__(self, value,board):
+	def __init__(self, value,board, choice = None):
 		self.value = value
 		self.board = board
 		self.children = []
+		self.choice = choice
 	
 	def generate(self, level = 0):
 		Player = ["X", "O"]
@@ -78,7 +99,7 @@ class TreeNode:
 				value = 0
 			if newboard.checkWin(): 
 				value = 1 if level % 2 == 0 else -1
-			self.children.append(TreeNode(value, newboard))
+			self.children.append(TreeNode(value, newboard, i))
 			self.board.removePiece(i)
 	
 
@@ -91,9 +112,29 @@ class TreeNode:
 			self.expandNode(level,player)
 			results = []
 			for child in self.children:
-				results.append(child.printPostOrder(level+1))
-			self.value = min(results) if level % 2 == 0 else max(results)
+				results.append(child.printPostOrder(level+1).value)
+			self.value = min(results) if level % 2 != 0 else max(results)
 		
 		print("value is ",self.value)
 		self.board.printBoard()
-		return self.value
+		return self
+	
+	def getBestMove(self, Max):
+		if Max:
+			return max(self.children, key=lambda child: child.value)
+		else:
+			return min(self.children, key=lambda child: child.value)
+	
+	def boardsEqual(self, board):
+		for row in range (self.board.numColumns):
+			for col in range (self.board.numRows):
+				if self.board.checkSpace(row, col).value != board.checkSpace(row, col).value:
+					return False
+		return True
+	
+	def printChildren(self):
+		for child in self.children:
+			print("Children of:")
+			self.board.printBoard()
+			print("Are: ")
+			child.board.printBoard()
