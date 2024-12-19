@@ -41,7 +41,8 @@ class Player:
 		self.board = board
 
 	def makeTree(self,board):
-		TreeNode(None,board).generate()
+		#TreeNode(None, board).generate()
+		TreeNode(None, board).printPostOrder()
 
 	def getMove(self, gameBoard):
 
@@ -76,6 +77,16 @@ class TreeNode:
 			if newboard.checkWin(): 
 				value = 1 if level % 2 == 0 else -1
 			self.children.append(TreeNode(value, newboard))
-			newboard.printBoard()
-			print(value)
 			self.board.removePiece(i)
+	
+	def printPostOrder(self, level  = 0):
+		player = ["X","O"]
+		if self == None:
+			return
+		if self.value is None:
+			self.expandNode(level,player)
+			for child in self.children:
+				child.printPostOrder(level+1)
+		else:
+			print("value is ",self.value)
+			self.board.printBoard()
