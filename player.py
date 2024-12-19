@@ -79,4 +79,3 @@ class TreeNode:
 			newboard.printBoard()
 			print(value)
 			self.board.removePiece(i)
-	
