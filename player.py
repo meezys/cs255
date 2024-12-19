@@ -48,24 +48,15 @@ class Player:
 		
 
 	def getMove(self, gameBoard):
-		print(self.gameTree.boardsEqual(gameBoard))
-		print("GameTree")
-		self.gameTree.board.printBoard()
-		print("GameBoard")
-		gameBoard.printBoard()
 		if self.gameTree.boardsEqual(gameBoard):
 			max = self.gameTree.getBestMove(True) 
 			self.gameTree = max
-			print("chosen state")
-			self.gameTree.board.printBoard()
 			return max.choice
 		else:
 			for child in self.gameTree.children:
 				if child.boardsEqual(gameBoard):
 					self.gameTree = child
-					print("child board:")
 			max = self.gameTree.getBestMove(True)
-			max.board.printBoard()
 			self.gameTree = max
 		return max.choice
 
@@ -115,8 +106,6 @@ class TreeNode:
 				results.append(child.printPostOrder(level+1).value)
 			self.value = min(results) if level % 2 != 0 else max(results)
 		
-		print("value is ",self.value)
-		self.board.printBoard()
 		return self
 	
 	def getBestMove(self, Max):
@@ -131,10 +120,3 @@ class TreeNode:
 				if self.board.checkSpace(row, col).value != board.checkSpace(row, col).value:
 					return False
 		return True
-	
-	def printChildren(self):
-		for child in self.children:
-			print("Children of:")
-			self.board.printBoard()
-			print("Are: ")
-			child.board.printBoard()
