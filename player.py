@@ -39,6 +39,7 @@ class Player:
 		self.numExpanded = 0 # Use this to track the number of nodes you expand
 		self.numPruned = 0 # Use this to track the number of times you prune
 		self.board = board
+		self.gameTree = None
 
 	def makeTree(self,board):
 		#TreeNode(None, board).generate()
