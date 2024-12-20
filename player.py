@@ -93,7 +93,6 @@ class TreeNode:
 			self.children.append(TreeNode(value, newboard, i))
 			self.board.removePiece(i)
 	
-
 	# processes the game tree in a depth-first fashion
 	def printPostOrder(self, level  = 0):
 		player = ["X","O"]
@@ -105,7 +104,6 @@ class TreeNode:
 			for child in self.children:
 				results.append(child.printPostOrder(level+1).value)
 			self.value = min(results) if level % 2 != 0 else max(results)
-		
 		return self
 	
 	def getBestMove(self, Max):
