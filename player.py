@@ -43,7 +43,7 @@ class Player:
 
 	def makeTree(self,board):
 		#TreeNode(None, board).generate()
-		self.gameTree = TreeNode(None, board).printPostOrder()
+		self.gameTree = TreeNode(None, board).minimax()
 
 		
 
@@ -64,6 +64,11 @@ class Player:
 
 		return 0
 
+	def getBoard(self):
+		max = self.gameTree.getBestMove(True) 
+		self.gameTree = max
+		return max.choice
+		
 class TreeNode:
 
 	def __init__(self, value,board, choice = None):
@@ -72,12 +77,6 @@ class TreeNode:
 		self.children = []
 		self.choice = choice
 	
-	def generate(self, level = 0):
-		Player = ["X", "O"]
-		self.expandNode(level, Player)
-		for child in self.children:
-			if child.value == None:
-				child.generate(level + 1)
 
 	# given a tree node, generate all its child states
 	def expandNode(self, level, player):
@@ -94,7 +93,7 @@ class TreeNode:
 			self.board.removePiece(i)
 	
 	# processes the game tree in a depth-first fashion
-	def printPostOrder(self, level  = 0):
+	def minimax(self, level  = 0):
 		player = ["X","O"]
 		if self == None:
 			return
