@@ -42,23 +42,16 @@ class Player:
 		self.gameTree = None
 
 	def makeTree(self,board):
-		#TreeNode(None, board).generate()
 		self.gameTree = TreeNode(None, board).minimax()
-
-		
 
 	def getMove(self, gameBoard):
 		if self.gameTree.boardsEqual(gameBoard):
-			max = self.gameTree.getBestMove(True) 
-			self.gameTree = max
-			return max.choice
+			return self.getBoard()
 		else:
 			for child in self.gameTree.children:
 				if child.boardsEqual(gameBoard):
 					self.gameTree = child
-			max = self.gameTree.getBestMove(True)
-			self.gameTree = max
-		return max.choice
+			return self.getBoard()
 
 	def getMoveAlphaBeta(self, gameBoard):
 
@@ -93,7 +86,7 @@ class TreeNode:
 			self.board.removePiece(i)
 	
 	# processes the game tree in a depth-first fashion
-	def minimax(self, level  = 0):
+	def minimax(self, level = 0):
 		player = ["X","O"]
 		if self == None:
 			return
@@ -101,7 +94,7 @@ class TreeNode:
 			self.expandNode(level,player)
 			results = []
 			for child in self.children:
-				results.append(child.printPostOrder(level+1).value)
+				results.append(child.minimax(level+1).value)
 			self.value = min(results) if level % 2 != 0 else max(results)
 		return self
 	
